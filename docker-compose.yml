@@ -6,3 +6,4 @@ services:
         ports:
             -   "22:22"
         tty: true
+        hostname: terminal
