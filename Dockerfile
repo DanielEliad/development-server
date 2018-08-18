@@ -18,7 +18,7 @@ WORKDIR /home/developer
 # set up fish
 RUN mkdir -p ~/.config/fish
 RUN touch ~/.config/config.fish
-RUN echo "tmux\nabbr -a gl='git pull'\nabbr -a gp='git push'\nabbr -a gco='git checkout'\nabbr -a gd='git diff'\nabbr -a gc='git commit'\nabbr -a ga='git add'\n" > ~/.config/fish/config.fish
+RUN echo "abbr -a gl='git pull'\nabbr -a gp='git push'\nabbr -a gco='git checkout'\nabbr -a gd='git diff'\nabbr -a gc='git commit'\nabbr -a ga='git add'\ntmux" > ~/.config/fish/config.fish
 
 # RUN wget https://www.fontsquirrel.com/fonts/download/ibm-plex -O ~/ibm-plex.zip
 # RUN mkdir ~/ibm-plex && cd ~/ibm-plex
@@ -30,12 +30,11 @@ RUN echo "tmux\nabbr -a gl='git pull'\nabbr -a gp='git push'\nabbr -a gco='git c
 RUN git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
 RUN sh ~/.vim_runtime/install_awesome_vimrc.sh
 
-RUN echo "tmux" >> ~/.bashrc
-RUN echo "set-option -g default-shell /usr/bin/fish\nset-option -g prefix C-q\n" >> ~/.tmux.conf
+RUN echo "set-option -g default-shell /usr/bin/fish\nset-option -g prefix C-q\nset-option -g last-window C-q" >> ~/.tmux.conf
 
 USER root
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
-CMD /usr/sbin/sshd -D && bash
+CMD /usr/sbin/sshd -D
