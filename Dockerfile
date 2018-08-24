@@ -6,11 +6,18 @@ RUN mkdir -p /run/sshd
 RUN sed -i "s/^exit 101$/exit 0/" /usr/sbin/policy-rc.d
 RUN rm -rf /var/cache/apt/*
 RUN apt-get update
-RUN apt-get install -y vim git tmux fish wget unzip net-tools openssh-server
+RUN apt-get install -y vim git tmux fish wget unzip net-tools openssh-server gcc python3
 RUN useradd -d /home/developer -m -s /usr/bin/fish developer
 RUN echo 'developer:toor' | chpasswd
 RUN echo 'root:root' | chpasswd
 EXPOSE 22
+RUN mkdir -p /usr/share/fonts
+RUN wget https://www.fontsquirrel.com/fonts/download/ibm-plex -O ~/ibm-plex.zip
+RUN mkdir ~/ibm-plex && cd ~/ibm-plex
+RUN echo 'A' | unzip ~/ibm-plex.zip
+RUN cd ~
+RUN mv ~/ibm-plex /usr/share/fonts/ibm-plex
+RUN rm ~/ibm-plex.zip
 
 USER developer
 WORKDIR /home/developer
@@ -20,12 +27,6 @@ RUN mkdir -p ~/.config/fish
 RUN touch ~/.config/config.fish
 RUN echo "abbr -a gl='git pull'\nabbr -a gp='git push'\nabbr -a gco='git checkout'\nabbr -a gd='git diff'\nabbr -a gc='git commit'\nabbr -a ga='git add'\ntmux" > ~/.config/fish/config.fish
 
-# RUN wget https://www.fontsquirrel.com/fonts/download/ibm-plex -O ~/ibm-plex.zip
-# RUN mkdir ~/ibm-plex && cd ~/ibm-plex
-# RUN echo 'A' | unzip ~/ibm-plex.zip
-# RUN cd ~
-# RUN mv ~/ibm-plex /usr/share/fonts/ibm-plex
-# RUN rm ~/ibm-plex.zip
 
 RUN git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
 RUN sh ~/.vim_runtime/install_awesome_vimrc.sh
